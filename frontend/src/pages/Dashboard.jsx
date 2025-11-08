@@ -3,16 +3,22 @@ import {
   Flex,
   useToast,
   Button,
+  useDisclosure,
 } from "@chakra-ui/react";
 import OngoingQuake from "../components/OngoingQuake/OngoingQuake";
 import RecentQuakes from "../components/RecentQuakes/RecentQuakes";
 import QuakeGuides from "../components/QuakeGuides/QuakeGuides";
 import { getEarthquakes } from "../api/quakes";
 import axios from "axios";
+import LocationModal from "../components/locationModal";
 
 function Dashboard() {
   const [quakeData, setQuakeData] = useState([]);
   const [lastAlertId, setLastAlertId] = useState(null);
+
+  const [location, setLocation] = useState(null);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const toast = useToast();
 
   useEffect(() => {
@@ -27,17 +33,29 @@ function Dashboard() {
     fetchEarthquakes();
   }, []);
 
+  // on mount, try load saved location; only open modal when none saved
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("user_location");
+      if (saved) {
+        setLocation(JSON.parse(saved));
+      } else {
+        onOpen();
+      }
+    } catch (e) {
+      console.warn("Failed to read user_location from localStorage", e);
+      onOpen();
+    }
+  }, [onOpen]);
+
   const BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
-  // Add this helper inside the Dashboard() component
   const handleFetchAndCheck = async () => {
     try {
-      // trigger backend to fetch & insert recent earthquakes
+      // fetch latest earthquakes (use proper template literal)
       await axios.get(`${BASE}/data/earthquakes`, { timeout: 15000 });
-      // allow alerting again
       setLastAlertId(null);
 
-      // immediately request distance to trigger toast if alert=true
       const res = await axios.get(`${BASE}/data/distance`, {
         params: { user_id: 1, alert_threshold_km: 100000 },
         timeout: 10000,
@@ -59,21 +77,34 @@ function Dashboard() {
       }
     } catch (err) {
       console.error("fetch&check failed:", err?.response?.data ?? err.message ?? err);
+      toast({
+        title: "Error",
+        description: "Failed to fetch or check earthquakes",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
     }
   };
 
   return (
-    <Flex
-      justify="center"
-      p={["20px", "30px"]}
-    >
-      <Flex direction="column" gap="20px" w="min(600px, 95%)">
-        <Button size="sm" alignSelf="flex-end" onClick={handleFetchAndCheck}>Fetch new quakes & check</Button>
-        <OngoingQuake />
-        <RecentQuakes quakeData={quakeData} />
-        <QuakeGuides />
+    <>
+      {!location && (
+        <LocationModal isOpen={isOpen} onClose={onClose} setLocation={setLocation}/>
+      )}
+
+      <Flex
+        justify="center"
+        p={["20px", "30px"]}
+      >
+        <Flex direction="column" gap="20px" w="min(600px, 95%)">
+          <Button size="sm" alignSelf="flex-end" onClick={handleFetchAndCheck}>Fetch new quakes & check</Button>
+          <OngoingQuake />
+          <RecentQuakes quakeData={quakeData} />
+          <QuakeGuides />
+        </Flex>
       </Flex>
-    </Flex>
+    </>
   );
 }
 

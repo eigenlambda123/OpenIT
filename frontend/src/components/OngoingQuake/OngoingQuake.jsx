@@ -1,24 +1,29 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Box, Flex, Grid,
-  Heading, Text,
-  Button,
+  Flex,
+  Heading,
+  Box,
+  Grid,
+  Text,
   HStack,
+  Button,
   useToast,
-  useColorModeValue
+  useColorModeValue,
 } from "@chakra-ui/react";
-import axios from "axios";
+import { SearchIcon } from "@chakra-ui/icons";
 import Minimap from "../Minimap";
 
 function OngoingQuake() {
+  // --- Hooks (always run, top of component) ---
   const navigate = useNavigate();
-  const [quakeData, setQuakeData] = useState(null);
-  const [loading, setLoading] = useState(false);
   const toast = useToast();
   const BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
-  // Move all useColorModeValue calls to the top
+  const [quakeData, setQuakeData] = useState(null);
+  const [nearbyEvacuations, setNearbyEvacuations] = useState([]);
+
+  // Chakra color hooks MUST live here (never conditionally)
   const bgColor = useColorModeValue("white", "gray.800");
   const mapBgColor = useColorModeValue("gray.100", "gray.900");
   const headingColor = useColorModeValue("gray.800", "white");
@@ -28,96 +33,50 @@ function OngoingQuake() {
   const viewMapBgColor = useColorModeValue("gray.200", "gray.600");
   const viewMapHoverBgColor = useColorModeValue("gray.300", "gray.500");
 
-  const fetchQuakeData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get(`${BASE}/data/distance`, {
-        params: {
-          user_id: 1,
-          alert_threshold_km: 50000
-        }
-      });
+  // --- data fetching / effects (unconditional hooks) ---
+  useEffect(() => {
+    let mounted = true;
 
-      if (response.data && response.data.alert) {
-        setQuakeData({
-          latitude: response.data.latitude,
-          longitude: response.data.longitude,
-          earthquake_place: response.data.earthquake_place,
-          earthquake_time: response.data.earthquake_time,
-          magnitude: response.data.magnitude,
-          distance_km: response.data.distance_km,
-          earthquake_id: response.data.earthquake_id
-        });
+    const fetchLatest = async () => {
+      try {
+        // example: fetch latest distance/quake info from backend
+        const res = await fetch(`${BASE}/data/distance?user_id=1&alert_threshold_km=100000`);
+        const data = await res.json();
+        if (!mounted) return;
+        // Expect data to contain earthquake info; adapt to your API shape
+        if (data?.earthquake_place) {
+          setQuakeData(data);
+          // fetch nearby evacuations if API provides an endpoint
+          // (optional) setNearbyEvacuations(await fetch(...))
+        } else {
+          setQuakeData(null);
+        }
+      } catch (err) {
+        console.warn("OngoingQuake: failed to fetch:", err);
       }
-    } catch (error) {
-      console.error("Failed to fetch earthquake data:", error);
-      toast({
-        title: "Error",
-        description: "Failed to fetch earthquake data",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    } finally {
-      setLoading(false);
-    }
+    };
+
+    fetchLatest();
+    const interval = setInterval(fetchLatest, 30_000); // refresh periodically
+    return () => {
+      mounted = false;
+      clearInterval(interval);
+    };
   }, [BASE, toast]);
 
-  useEffect(() => {
-    fetchQuakeData();
-  }, [fetchQuakeData]);
-
+  // --- handlers (defined after hooks) ---
   const handleViewMap = () => {
-    if (!quakeData?.latitude || !quakeData?.longitude) {
-      toast({
-        title: "Error",
-        description: "Invalid location data",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-      return;
-    }
-    
-    navigate('/map', {
-      state: {
-        center: [Number(quakeData.latitude), Number(quakeData.longitude)],
-        quake: quakeData
-      }
-    });
+    if (!quakeData) return;
+    navigate("/map", { state: { quake: quakeData, evacuations: nearbyEvacuations } });
   };
 
   const handleEvacuate = async () => {
-    if (!quakeData?.latitude || !quakeData?.longitude) {
-      toast({
-        title: "Error",
-        description: "Invalid location data",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-      return;
-    }
-
-    try {
-      const response = await axios.get(`${BASE}/data/evacuation`);
-      navigate('/map', {
-        state: {
-          center: [quakeData.latitude, quakeData.longitude],
-          quake: quakeData,
-          showEvacuations: true,
-          evacuations: response.data
-        }
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Could not fetch evacuation centers",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    }
+    toast({
+      title: "Evacuate",
+      description: "Evacuation flow not implemented here.",
+      status: "info",
+      duration: 4000,
+    });
   };
 
   // Only render if we have quakeData with earthquake_place
@@ -126,6 +85,7 @@ function OngoingQuake() {
   return (
     <Flex direction="column" gap="10px">
       <Heading size={["sm", "md"]}>Happening Right Now</Heading>
+
       <Flex
         outline="black"
         direction="column"
@@ -139,21 +99,20 @@ function OngoingQuake() {
             <Minimap location={[Number(quakeData.latitude), Number(quakeData.longitude)]} />
           )}
         </Box>
+
         <Flex direction="column" gap="10px" p="10px">
           <Heading size="sm" color={headingColor}>
             {quakeData.earthquake_place}
           </Heading>
-          <Grid
-            templateColumns="repeat(2, 1fr)"
-            gap="5px"
-            w="100%"
-          >
+
+          <Grid templateColumns="repeat(2, 1fr)" gap="5px" w="100%">
             <Text fontSize="15px" color={timeColor}>
               {new Date(Number(quakeData.earthquake_time)).toLocaleDateString()}
             </Text>
             <Text fontSize="sm" color={timeColor}>
               {new Date(Number(quakeData.earthquake_time)).toLocaleTimeString()}
             </Text>
+
             <Text fontSize="sm" color={alertColor} fontWeight="semibold">
               {quakeData.magnitude} Magnitude
             </Text>
@@ -162,31 +121,22 @@ function OngoingQuake() {
             </Text>
           </Grid>
         </Flex>
+
         <HStack w="100%" p="10px" bg={buttonsBgColor}>
-          <Button 
-            size={["sm", "md"]} 
-            w="50%" 
+          <Button
+            size={["sm", "md"]}
+            w="50%"
             onClick={handleViewMap}
             variant="solid"
             bg={viewMapBgColor}
-            _hover={{
-              bg: viewMapHoverBgColor
-            }}
+            _hover={{ bg: viewMapHoverBgColor }}
+            leftIcon={<SearchIcon />}
           >
             View in Map
           </Button>
-          <Button 
-            size={["sm", "md"]} 
-            w="50%" 
-            onClick={handleEvacuate}
-            colorScheme="red"
-            variant="solid"
-          >
-            <Flex align="center" gap="5px">
-              <SearchIcon /> 
-              <Text>Evacuate</Text>
-            </Flex>
-            
+
+          <Button size={["sm", "md"]} w="50%" onClick={handleEvacuate} colorScheme="red" variant="solid">
+            Evacuate
           </Button>
         </HStack>
       </Flex>

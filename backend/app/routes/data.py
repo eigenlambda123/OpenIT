@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import Session, select
-from typing import List
+from typing import List, Optional
 from app.db.database import get_session
 from app.models.data import Earthquake, Evacuation, UserLocation
 from app.schemas.data import EarthquakeSchema, UserLocationCreate
@@ -166,3 +166,20 @@ def get_distance(
         "latitude": earthquake.latitude,
         "longitude": earthquake.longitude,
     }
+
+@router.get("/user_location/{user_id}")
+def get_user_location_by_id(user_id: int, session: Session = Depends(get_session)):
+    user = session.exec(select(UserLocation).where(UserLocation.id == user_id)).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User location not found")
+    return user
+
+@router.get("/user_location")
+def get_user_location_by_email(email: Optional[str] = None, session: Session = Depends(get_session)):
+    if email:
+        user = session.exec(select(UserLocation).where(UserLocation.email == email)).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User location not found")
+        return user
+    # fallback: return all saved user locations
+    return session.exec(select(UserLocation)).all()
