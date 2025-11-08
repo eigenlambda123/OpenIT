@@ -1,8 +1,9 @@
 from pydantic import BaseModel
+from typing import Optional, List, Union
 
 class Earthquake(BaseModel):
     title: str
     mag: float
     place: str      
-    time: str
-    coordinates: str
+    time: int
+    coordinates: List[Union[float, int]]
