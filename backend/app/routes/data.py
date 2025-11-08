@@ -114,7 +114,7 @@ async def get_evacuation_data(session: Session = Depends(get_session)):
 
 @router.post("/add/user_location", response_model=UserLocationCreate)
 async def add_user_location(user: UserLocationCreate, session: Session = Depends(get_session)):
-    new_user = UserLocation(latitude=user.latitude, longitude=user.longitude)
+    new_user = UserLocation(email=user.email, latitude=user.latitude, longitude=user.longitude)
     session.add(new_user)
     session.commit()
     session.refresh(new_user)

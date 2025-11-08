@@ -4,3 +4,5 @@ uvicorn
 httpx
 
 sqlmodel
+pydantic[email]
+fastapi_mail

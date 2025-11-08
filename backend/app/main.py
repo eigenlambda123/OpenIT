@@ -1,10 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes.data import router
 from app.db.database import init_db
 from app.scripts.prepopulate_database import populate_lucena_evacuation_centers
 from app.db.database import get_session
 from app.models.data import Evacuation
+
+from app.routes.data import router as data_router
+from app.routes.email import router as email_router
 
 
 app = FastAPI()
@@ -32,4 +34,5 @@ async def on_startup():
     finally:
         db.close()
 
-app.include_router(router)
+app.include_router(data_router)
+app.include_router(email_router)

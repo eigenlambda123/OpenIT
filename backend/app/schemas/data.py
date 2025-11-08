@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from typing import Optional, List, Union
 
 class EarthquakeSchema(BaseModel):
@@ -10,5 +10,6 @@ class EarthquakeSchema(BaseModel):
     longitude: float
 
 class UserLocationCreate(BaseModel):
+    email: EmailStr
     latitude: float
     longitude: float
