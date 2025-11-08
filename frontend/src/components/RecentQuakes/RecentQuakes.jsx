@@ -18,7 +18,7 @@ function RecentQuakes() {
     const fetchQuakes = async () => {
       setLoading(true);
       try {
-        // Try online endpoint first
+        // Try online endpoint
         const onlineRes = await axios.get(`${BASE}/data/earthquakes`);
         if (onlineRes.data && onlineRes.data.length > 0) {
           setQuakeData(onlineRes.data);
