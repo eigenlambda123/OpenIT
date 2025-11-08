@@ -18,6 +18,9 @@
     <br />
 </div>
 
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
 [![project_license][license-shield]][license-url]
 
 <!-- TABLE OF CONTENTS -->
@@ -38,123 +41,60 @@
   </ol>
 </details>
 
-# LIGTAS
+**Ligtas** is a web-based, mobile-first application that provides real-time Earthquake Information and personalized dashboards based on earthquake thresshold.
 
-LIGTAS is a web-based, mobile-first application for real-time earthquake monitoring and evacuation guidance tailored for the Philippines. It provides live earthquake alerts, nearby evacuation center information, and an interactive map.
+With tailored “Safety Guides”, **Ligtas** helps the users navigate their way to safety.
 
-## Features
-- Real-time earthquake feed
-- Map view with earthquake and evacuation center markers
-- User location support and evacuation guidance
-- Mobile-first responsive UI
+The app also features an interactive map that helps users locate the nearest “Evac Center” and also a filtering system on which the user can filter out the map to see the past earthquakes and many more. Aside from Evacuation Center it also features a Routing system to navigate the user to safety.
 
-## Built With
-Frontend
-- React
-- Chakra UI
-- Leaflet (react-leaflet)
-- Vite
 
-Backend
-- Python
-- FastAPI
-- SQLModel / SQLite
+### Built With
 
-## Prerequisites
-- Node.js (16+ recommended) and npm
-- Python 3.10+
-- Git (optional)
-- Windows PowerShell or Command Prompt
+Frontend:
+- [![Chakra][Chakra.react]][Chakra.url]
+- [![Leaflet][Leaflet.react]][leaflet.url]
 
-## Setup
+Backend:
+- [![Python][Python]][Python-url]
+- [![FastAPI][FastAPI]][FastAPI-url]
 
-Clone repository (if not already):
-```bash
-git clone https://github.com/eigenlambda123/OpenIT.git
-cd OpenIT
-```
+Database:
+- [![SQLlite][SQL lite]][SQLlite.url]
 
-### Backend
-1. Open a terminal in `backend`:
-```powershell
-cd c:\Users\villa\OneDrive\Desktop\OpenIT\backend
-```
-2. Create and activate a Python virtual environment:
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1    # PowerShell
-# or
-.\.venv\Scripts\activate.bat    # Command Prompt
-```
-3. Install dependencies:
-```powershell
-pip install -r requirements.txt
-```
-4. Run the backend (reload enabled for development):
-```powershell
-uvicorn app.main:app --reload
-```
-- Default backend address: http://127.0.0.1:8000
-- If you change the backend host/port, set the frontend env variable below.
+APIs:
+- *USGSD*
 
-### Frontend
-1. Open a terminal in `frontend`:
-```powershell
-cd c:\Users\villa\OneDrive\Desktop\OpenIT\frontend
-```
-2. Install dependencies:
-```powershell
-npm install
-```
-3. Configure API base (optional): create a `.env` or set environment variable
-- Vite expects variables prefixed with `VITE_`. Example in PowerShell:
-```powershell
-$env:VITE_API_URL="http://localhost:8000"
-npm run dev
-```
-4. Start the frontend:
-```powershell
-npm run dev
-```
-- Frontend served by Vite (default http://localhost:5173). The app reads `import.meta.env.VITE_API_URL` for API calls.
+Features: 
+- *Real time earthquake feed* [!]
+- *Map View* Find nearest evacuation center
+-  Mobile-first, responsive design
 
-## Backend API endpoints (examples)
-- GET /data/earthquakes
-- GET /data/evacuation
-- GET /data/user_location/{user_id}
-- POST /data/add/user_location
+Screenshots: 
 
-Adjust frontend calls if your backend uses different routes or authentication.
-
-## Static assets (icons)
-Put custom icons used by Leaflet in the frontend public folder so they are served at the root URL:
-- Copy icon files to:
-  - `frontend/public/earthquake.png`
-  - `frontend/public/evacuation.png`
-- Alternatively, place icons in `frontend/src/assets/` and import them in code.
-
-Example PowerShell copy:
-```powershell
-Copy-Item "C:\path\to\earthquake.png" "c:\Users\villa\OneDrive\Desktop\OpenIT\frontend\public\earthquake.png"
-Copy-Item "C:\path\to\evacuation.png" "c:\Users\villa\OneDrive\Desktop\OpenIT\frontend\public\evacuation.png"
-```
-
-## Local development notes
-- The app saves a local user location in localStorage under the key `user_location`. You can persist the location to the backend using the settings form or modal flows provided.
-- If you change filenames (for example `LocationModal.jsx` vs `locationModal.jsx`) keep import paths consistent with case sensitivity to avoid bundler issues.
-
-## Troubleshooting
-- If Vite or the backend shows a syntax or routing error after renaming files, stop the dev server and restart it.
-- For CORS issues, enable CORS in FastAPI or configure the frontend to use the correct API URL.
-
+<!-- SCREENSHOTS -->
 ## Screenshots
-Screenshots are included in the repository under `frontend/public/logo/` and referenced in this README.
 
-## License
-Refer to the LICENSE file in the repository.
+<div>
+  <h3>Onboarding</h3>
+    <span>
+      <img src="public/logo/Screenshot 2025-11-09 051222.png" alt="Screenshot 2025-11-09 051222 png" height="700"> 
+    </span>
+  <hr>
+  <h3>Dashboard</h3>
+    <img src="public/logo/Screenshot 2025-11-09 051322.png" alt="Screenshot 2025-11-09 051322 png" height="700">
+    <img src="public/logo/Screenshot 2025-11-09 051358.png" alt="Screenshot 2025-11-09 051358 png" height="700">
+  <hr>
+  <h3>Map</h3>
+    <span>
+      <img src="public/logo/Screenshot 2025-11-09 051422.png" alt="Screenshot 2025-11-09 051422 png" height="700">
+    </span>
+  <hr>
+  <h3>Settings</h3>
+    <img src="public/logo/Screenshot 2025-11-09 051438.png" alt="Screenshot 2025-11-09 051438 png" height="700">
+  <hr>
+</div>
 
-## Contact
-For questions or issues, open an issue on the repository or contact the maintainer via the repository contact details.
+
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
@@ -164,8 +104,8 @@ For questions or issues, open an issue on the repository or contact the maintain
 [forks-url]: https://github.com/neophiles/KlimaTech/network/members
 [stars-shield]: https://img.shields.io/github/stars/neophiles/KlimaTech.svg?style=for-the-badge
 [stars-url]: https://github.com/neophiles/KlimaTech/stargazers
-[license-shield]: https://img.shields.io/github/license/eigenlambda123/OpenIT.svg?style=for-the-badge
-[license-url]: https://github.com/eigenlambda123/OpenIT/blob/main/LICENSE
+[license-shield]: https://img.shields.io/github/license/neophiles/KlimaTech.svg?style=for-the-badge
+[license-url]: https://github.com/neophiles/KlimaTech/blob/main/LICENSE
 [Presko-screenshot]: frontend/public/logo/name_logo.png
 <!-- Shields.io badges-->
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
@@ -175,4 +115,4 @@ For questions or issues, open an issue on the repository or contact the maintain
 [FastAPI]: https://img.shields.io/badge/FastAPI-009485.svg?logo=fastapi&logoColor=white
 [FastAPI-url]: https://fastapi.tiangolo.com
 [Python]: https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=fff
-[Python-url]: https://www.python.org
+[Python-url]: https://www.python.org2

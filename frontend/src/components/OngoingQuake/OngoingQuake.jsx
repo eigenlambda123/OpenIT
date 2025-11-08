@@ -15,7 +15,7 @@ import { SearchIcon } from "@chakra-ui/icons";
 import Minimap from "../Minimap";
 
 function OngoingQuake() {
-  // --- Hooks (always run, top of component) ---
+
   const navigate = useNavigate();
   const toast = useToast();
   const BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
@@ -23,7 +23,6 @@ function OngoingQuake() {
   const [quakeData, setQuakeData] = useState(null);
   const [nearbyEvacuations, setNearbyEvacuations] = useState([]);
 
-  // Chakra color hooks MUST live here (never conditionally)
   const bgColor = useColorModeValue("white", "gray.800");
   const mapBgColor = useColorModeValue("gray.100", "gray.900");
   const headingColor = useColorModeValue("gray.800", "white");
@@ -33,13 +32,13 @@ function OngoingQuake() {
   const viewMapBgColor = useColorModeValue("gray.200", "gray.600");
   const viewMapHoverBgColor = useColorModeValue("gray.300", "gray.500");
 
-  // --- data fetching / effects (unconditional hooks) ---
+  
   useEffect(() => {
     let mounted = true;
 
     const fetchLatest = async () => {
       try {
-        // example: fetch latest distance/quake info from backend
+        // fetch latest distance/quake info from backend
         const res = await fetch(`${BASE}/data/distance?user_id=1&alert_threshold_km=100000`);
         const data = await res.json();
         if (!mounted) return;
@@ -64,7 +63,6 @@ function OngoingQuake() {
     };
   }, [BASE, toast]);
 
-  // --- handlers (defined after hooks) ---
   const handleViewMap = () => {
     if (!quakeData) return;
     navigate("/map", { state: { quake: quakeData, evacuations: nearbyEvacuations } });
