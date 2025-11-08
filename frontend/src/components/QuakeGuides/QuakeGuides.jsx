@@ -28,6 +28,7 @@ function QuakeGuides() {
         selectedDoRandoms.some(item => item.heading === doRandom.heading) ||
         selectedDontRandoms.some(item => item.heading === dontRandom.heading)
       ) {
+        i--;
         continue;
       }
 
