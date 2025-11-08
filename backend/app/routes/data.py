@@ -1,19 +1,15 @@
-from fastapi import HTTPException, APIRouter, Depends
-import httpx
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlmodel import Session, select
 from typing import List
 from app.db.database import get_session
-from sqlmodel import Session, select
 from app.models.data import Earthquake, Evacuation, UserLocation
 from app.schemas.data import EarthquakeSchema, UserLocationCreate
+import math
+import httpx
 
 router = APIRouter(prefix="/data", tags=["data"])
 
 USGS_API_BASE_URL = "https://earthquake.usgs.gov/fdsnws/event/1/"
-
-# Import your SQLAlchemy model here
-# from .models import EarthquakeModel, get_session
-# Import your Pydantic response model here
-# from .schemas import Earthquake 
 
 @router.get("/earthquakes", response_model=List[EarthquakeSchema])
 async def get_earthquakes(
@@ -121,51 +117,52 @@ async def add_user_location(user: UserLocationCreate, session: Session = Depends
     return new_user
 
 
-import math
-
 def haversine(lat1, lon1, lat2, lon2):
-    R = 6371  # Earth radius in kilometers
-    lat1, lon1, lat2, lon2 = map(math.radians, [lat1, lon1, lat2, lon2])
-    dlat = lat2 - lat1
-    dlon = lon2 - lon1
-
-    a = math.sin(dlat/2)**2 + math.cos(lat1)*math.cos(lat2)*math.sin(dlon/2)**2
+    # returns distance in kilometers
+    R = 6371.0
+    phi1 = math.radians(lat1)
+    phi2 = math.radians(lat2)
+    dphi = math.radians(lat2 - lat1)
+    dlambda = math.radians(lon2 - lon1)
+    a = math.sin(dphi/2)**2 + math.cos(phi1)*math.cos(phi2)*math.sin(dlambda/2)**2
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-
     return R * c
 
+@router.get("/earthquakes/{earthquake_id}", response_model=Earthquake)
+def get_earthquake(earthquake_id: int, session: Session = Depends(get_session)):
+    eq = session.exec(select(Earthquake).where(Earthquake.id == earthquake_id)).first()
+    if not eq:
+        raise HTTPException(status_code=404, detail="Earthquake not found")
+    return eq
+
 @router.get("/distance")
-async def user_distance_from_earthquake(
-    user_id: int,
+def get_distance(
+    user_id: int = Query(...),
+    alert_threshold_km: float = Query(100.0),
     session: Session = Depends(get_session),
-    alert_threshold_km: float = 100.0,
 ):
-    # Get user location
+    # get user location
     user = session.exec(select(UserLocation).where(UserLocation.id == user_id)).first()
     if not user:
-        raise HTTPException(status_code=404, detail="User location not found")
+        raise HTTPException(status_code=404, detail="User not found")
 
-    # Get latest earthquake
-    earthquake = session.exec(
-        select(Earthquake).order_by(Earthquake.time.desc())
-    ).first()
+    # latest earthquake
+    earthquake = session.exec(select(Earthquake).order_by(Earthquake.time.desc())).first()
     if not earthquake:
         raise HTTPException(status_code=404, detail="No earthquake data")
 
-    # Calculate distance
-    distance_km = haversine(
-        user.latitude, user.longitude,
-        earthquake.latitude, earthquake.longitude
-    )
-
+    distance_km = haversine(user.latitude, user.longitude, earthquake.latitude, earthquake.longitude)
     alert = distance_km <= alert_threshold_km
 
     return {
         "earthquake_id": earthquake.id,
         "earthquake_time": earthquake.time,
-        "distance_km": round(distance_km, 2),
+        "earthquake_place": earthquake.place,
+        "magnitude": earthquake.mag,
+        "distance_km": distance_km,
         "alert": alert,
         "threshold_km": alert_threshold_km,
-        "earthquake_place": earthquake.place,
-        "magnitude": earthquake.mag
+        # include coordinates so frontend can map directly
+        "latitude": earthquake.latitude,
+        "longitude": earthquake.longitude,
     }

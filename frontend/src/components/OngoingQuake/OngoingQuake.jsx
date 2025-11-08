@@ -25,40 +25,100 @@ function OngoingQuake() {
         const response = await axios.get(`${BASE}/data/distance`, {
           params: {
             user_id: 1,
-            alert_threshold_km: 500000 // Set threshold to 50km
+            alert_threshold_km: 50000000
           }
         });
 
-        if (response.data.alert) {
-          setQuakeData(response.data);
+        console.log("Quake response:", response.data);
+
+        // Check if we have valid data with alert=true
+        if (response.data && response.data.alert) {
+          // Set all the data we received
+          setQuakeData({
+            latitude: response.data.latitude,
+            longitude: response.data.longitude,
+            earthquake_place: response.data.earthquake_place,
+            earthquake_time: response.data.earthquake_time,
+            magnitude: response.data.magnitude,
+            distance_km: response.data.distance_km,
+            earthquake_id: response.data.earthquake_id
+          });
         }
       } catch (error) {
         console.error("Failed to fetch earthquake data:", error);
+        toast({
+          title: "Error",
+          description: "Failed to fetch earthquake data",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
       }
     };
 
     fetchQuakeData();
-  }, []);
+  }, [BASE, toast]);
 
   const handleViewMap = () => {
-    if (!quakeData) return;
+    if (!quakeData?.latitude || !quakeData?.longitude) {
+      console.error("Invalid coordinates:", quakeData);
+      toast({
+        title: "Error",
+        description: "Could not load map - invalid coordinates",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+      return;
+    }
     
     navigate('/map', {
       state: {
-        center: [ quakeData.latitude, quakeData.longitude ],
-        quake: quakeData
+        center: [Number(quakeData.latitude), Number(quakeData.longitude)],
+        quake: {
+          ...quakeData,
+          latitude: Number(quakeData.latitude),
+          longitude: Number(quakeData.longitude)
+        }
       }
     });
   };
 
   const handleEvacuate = async () => {
+    if (!quakeData?.latitude || !quakeData?.longitude) {
+      toast({
+        title: "Error",
+        description: "Invalid location data",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+      return;
+    }
+
     try {
-      // Fetch evacuation centers
-      const response = await axios.get(`${BASE}/data/evacuation`);
-      console.log(response.data);
+      const response = await axios.get(`${BASE}/data/evacuation`, {
+        params: {
+          latitude: Number(quakeData.latitude),
+          longitude: Number(quakeData.longitude),
+          radius_km: 10
+        }
+      });
+
+      if (response.data.length === 0) {
+        toast({
+          title: "No Evacuation Centers Found",
+          description: "No nearby evacuation centers found in your area",
+          status: "warning",
+          duration: 5000,
+          isClosable: true,
+        });
+        return;
+      }
+
       navigate('/map', {
         state: {
-          center: [ quakeData.latitude, quakeData.longitude ],
+          center: [quakeData.latitude, quakeData.longitude],
           quake: quakeData,
           showEvacuations: true,
           evacuations: response.data
@@ -75,8 +135,8 @@ function OngoingQuake() {
     }
   };
 
-  // Only show if there's a nearby earthquake
-  if (!quakeData) return null;
+  // Only render if we have quakeData with earthquake_place
+  if (!quakeData?.earthquake_place) return null;
 
   return (
     <Flex direction="column" gap="10px">
@@ -90,7 +150,9 @@ function OngoingQuake() {
         sx={{filter: "drop-shadow(0px 0px 2px rgba(0, 0, 2, 0.3))"}}
       >
         <Box h="150px" w="100%" bg="gray.200">
-          <Minimap location={[quakeData.latitude, quakeData.longitude]} />
+          {quakeData.latitude && quakeData.longitude && (
+            <Minimap location={[Number(quakeData.latitude), Number(quakeData.longitude)]} />
+          )}
         </Box>
         <Flex direction="column" gap="10px" p="10px">
           <Heading size="sm">
@@ -102,12 +164,15 @@ function OngoingQuake() {
             w="100%"
           >
             <Text fontSize="15px">
-              {new Date(quakeData.earthquake_time).toLocaleDateString()}
+              {new Date(Number(quakeData.earthquake_time)).toLocaleDateString()}
             </Text>
             <Text fontSize="sm">
-              {new Date(quakeData.earthquake_time).toLocaleTimeString()}
+              {new Date(Number(quakeData.earthquake_time)).toLocaleTimeString()}
             </Text>
-            <Text fontSize="sm" color={quakeData.magnitude >= 5 ? "red.500" : "black"}>
+            <Text 
+              fontSize="sm" 
+              color={Number(quakeData.magnitude) >= 5 ? "red.500" : "black"}
+            >
               {quakeData.magnitude} Magnitude
             </Text>
             <Text fontSize="sm" color="red.500">
@@ -116,11 +181,7 @@ function OngoingQuake() {
           </Grid>
         </Flex>
         <HStack w="100%" p="10px">
-          <Button
-            size={["sm", "md"]}
-            w="50%"
-            onClick={handleViewMap}
-          >
+          <Button size={["sm", "md"]} w="50%" onClick={handleViewMap}>
             View in Map
           </Button>
           <Button 
