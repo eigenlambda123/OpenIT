@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import { SearchIcon } from "@chakra-ui/icons";
 import {
   Box, Flex, Grid,
@@ -8,7 +9,6 @@ import {
   HStack,
   useToast,
 } from "@chakra-ui/react";
-import axios from "axios";
 import Minimap from "../Minimap";
 
 function OngoingQuake() {
@@ -88,7 +88,7 @@ function OngoingQuake() {
         bg="white"
         sx={{filter: "drop-shadow(0px 0px 2px rgba(0, 0, 2, 0.3))"}}
       >
-        <Box h="100px" w="100%" bg="gray.200">
+        <Box h="150px" w="100%" bg="gray.200">
           <Minimap location={[quakeData.latitude, quakeData.longitude]} />
         </Box>
         <Flex direction="column" gap="10px" p="10px">
@@ -110,7 +110,7 @@ function OngoingQuake() {
               {quakeData.magnitude} Magnitude
             </Text>
             <Text fontSize="sm" color="red.500">
-              {Math.round(quakeData.distance_km)}km away
+              {Math.round(quakeData.distance_km)} km away
             </Text>
           </Grid>
         </Flex>
