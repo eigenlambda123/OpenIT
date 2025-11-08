@@ -214,7 +214,11 @@ function OngoingQuake() {
             onClick={handleEvacuate}
             colorScheme="red"
           >
-            Evacuate
+            <Flex align="center" gap="5px">
+              <SearchIcon /> 
+              <Text>Evacuate</Text>
+            </Flex>
+            
           </Button>
         </HStack>
       </Flex>
