@@ -2,7 +2,7 @@ from fastapi import HTTPException, APIRouter, Depends
 import httpx
 from typing import List
 from app.db.database import get_session
-from sqlmodel import Session
+from sqlmodel import Session, select
 from app.models.data import Earthquake
 from app.schemas.data import EarthquakeSchema
 
@@ -100,3 +100,9 @@ async def get_earthquakes(
             pass
         raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
 
+
+@router.get("/earthquakes/offline")
+async def get_earthquakes_from_db(session: Session = Depends(get_session)):
+    data = session.exec(select(Earthquake).limit(3)).all()
+    return data
+    
