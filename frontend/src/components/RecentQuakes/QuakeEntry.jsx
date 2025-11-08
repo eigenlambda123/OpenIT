@@ -1,6 +1,7 @@
 import {
   Flex,
   Heading, Text,
+  useColorModeValue
 } from "@chakra-ui/react";
 
 function QuakeEntry({ quakeData }) {
@@ -10,7 +11,7 @@ function QuakeEntry({ quakeData }) {
     <Flex
       direction="column"
       w="100%"
-      bg="gray.200"
+      bg={useColorModeValue("gray.200", "gray.900")}
       p="10px"
     >
       <Heading fontSize={["12px", "md"]}>

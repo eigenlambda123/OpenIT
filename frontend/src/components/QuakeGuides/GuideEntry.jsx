@@ -14,7 +14,7 @@ function GuideEntry({ guideData }) {
     <Flex
       direction="column"
       w="100%"
-      bg="gray.200"
+      bg={useColorModeValue("gray.200", "gray.900")}
       borderLeft="5px solid"
       borderColor={borderColor}
       p="10px"
