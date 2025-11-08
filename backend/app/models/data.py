@@ -11,3 +11,10 @@ class Earthquake(SQLModel, table=True):
     latitude: float
     longitude: float
      
+class Evacuation(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    name : str
+    type: str
+    description: str
+    latitude: float
+    longitude: float
