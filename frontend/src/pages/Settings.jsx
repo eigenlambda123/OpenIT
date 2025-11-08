@@ -94,11 +94,6 @@ function Settings() {
   return (
     <Box p={4} maxW="600px" mx="auto">
       <VStack spacing={6} align="stretch">
-        <Heading size="lg">Location Settings</Heading>
-        <Text>
-          Set your location to receive earthquake alerts when tremors are detected nearby.
-        </Text>
-
         <form onSubmit={handleSubmit}>
           <VStack spacing={4}>
             <FormControl isRequired>
@@ -109,26 +104,6 @@ function Settings() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
               />
-            </FormControl>
-
-            <FormControl>
-              <FormLabel>Location</FormLabel>
-              {location ? (
-                <Text>
-                  Latitude: {location.latitude.toFixed(4)}<br />
-                  Longitude: {location.longitude.toFixed(4)}
-                </Text>
-              ) : (
-                <Text color="gray.500">No location set</Text>
-              )}
-              <Button
-                mt={2}
-                colorScheme="blue"
-                onClick={handleGetLocation}
-                isLoading={loading}
-              >
-                {location ? 'Update Location' : 'Get Current Location'}
-              </Button>
             </FormControl>
 
             <Button
