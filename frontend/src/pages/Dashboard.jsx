@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   Flex,
   useToast,
+  Button,
 } from "@chakra-ui/react";
 import OngoingQuake from "../components/OngoingQuake/OngoingQuake";
 import RecentQuakes from "../components/RecentQuakes/RecentQuakes";
@@ -11,6 +12,8 @@ import axios from "axios";
 
 function Dashboard() {
   const [quakeData, setQuakeData] = useState([]);
+  const [lastAlertId, setLastAlertId] = useState(null);
+  const toast = useToast();
 
   useEffect(() => {
     async function fetchEarthquakes() {
@@ -24,37 +27,48 @@ function Dashboard() {
     fetchEarthquakes();
   }, []);
 
-  const [lastAlertId, setLastAlertId] = useState(null);
+  const BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
-  const toast = useToast();
+  // Add this helper inside the Dashboard() component
+  const handleFetchAndCheck = async () => {
+    try {
+      // trigger backend to fetch & insert recent earthquakes
+      await axios.get(`${BASE}/data/earthquakes`, { timeout: 15000 });
+      // allow alerting again
+      setLastAlertId(null);
 
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      const res = await axios.get("/data/distance?user_id=1&alert_threshold_km=1000000");
-      const { earthquake_id, alert } = res.data;
+      // immediately request distance to trigger toast if alert=true
+      const res = await axios.get(`${BASE}/data/distance`, {
+        params: { user_id: 1, alert_threshold_km: 100000 },
+        timeout: 10000,
+      });
 
-      if (alert && earthquake_id !== lastAlertId) {
+      const { earthquake_id, alert, distance_km, earthquake_place, magnitude } = res.data ?? {};
+      console.log("[manual fetch] distance response:", res.data);
+
+      if (alert) {
         setLastAlertId(earthquake_id);
-        console.log(earthquake_id);
         toast({
-          title: "Earthquake Alert!",
-          description: `You are ${res.data.distance_km} km away from ${res.data.earthquake_place}.`,
+          title: "Earthquake Alert",
+          description: `Magnitude ${magnitude} — ${Math.round(distance_km)} km away at ${earthquake_place}`,
           status: "error",
           duration: 9000,
           isClosable: true,
+          position: "top",
         });
       }
-    }, 2000);
-
-    return () => clearInterval(interval);
-  }, [lastAlertId, toast]);
+    } catch (err) {
+      console.error("fetch&check failed:", err?.response?.data ?? err.message ?? err);
+    }
+  };
 
   return (
     <Flex
       justify="center"
       p={["20px", "30px"]}
-    >    
+    >
       <Flex direction="column" gap="20px" w="min(600px, 95%)">
+        <Button size="sm" alignSelf="flex-end" onClick={handleFetchAndCheck}>Fetch new quakes & check</Button>
         <OngoingQuake />
         <RecentQuakes quakeData={quakeData} />
         <QuakeGuides />
