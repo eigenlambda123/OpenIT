@@ -101,7 +101,7 @@ function OngoingQuake() {
         params: {
           latitude: Number(quakeData.latitude),
           longitude: Number(quakeData.longitude),
-          radius_km: 10
+          radius_km: 50
         }
       });
 
@@ -116,12 +116,38 @@ function OngoingQuake() {
         return;
       }
 
+      // find nearest evacuation to the quake (haversine)
+      const haversineKm = (lat1, lon1, lat2, lon2) => {
+        const R = 6371;
+        const toRad = (v) => (v * Math.PI) / 180;
+        const dLat = toRad(lat2 - lat1);
+        const dLon = toRad(lon2 - lon1);
+        const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
+      };
+
+      const evacuations = response.data;
+      let nearest = evacuations[0];
+      let minDist = haversineKm(quakeData.latitude, quakeData.longitude, nearest.latitude, nearest.longitude);
+
+      for (let i = 1; i < evacuations.length; i++) {
+        const e = evacuations[i];
+        const d = haversineKm(quakeData.latitude, quakeData.longitude, e.latitude, e.longitude);
+        if (d < minDist) {
+          minDist = d;
+          nearest = e;
+        }
+      }
+
+      // navigate to map and include evacCenter so ZoomToEvac will zoom there
       navigate('/map', {
         state: {
           center: [quakeData.latitude, quakeData.longitude],
+          evacCenter: [Number(nearest.latitude), Number(nearest.longitude)],
           quake: quakeData,
           showEvacuations: true,
-          evacuations: response.data
+          evacuations: evacuations
         }
       });
     } catch (error) {

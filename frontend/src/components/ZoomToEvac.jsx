@@ -7,9 +7,14 @@ function ZoomToEvac() {
   const map = useMap();
 
   useEffect(() => {
-    if (location.state?.center) {
-      const coords = location.state.center;
-      map.flyTo(coords, 18, { duration: 1.2 });
+    const target = location.state?.evacCenter ?? location.state?.center;
+    if (target && Array.isArray(target) && target.length === 2) {
+      const zoomLevel = location.state?.evacCenter ? 16 : 13;
+      try {
+        map.flyTo(target, zoomLevel, { duration: 1.2 });
+      } catch (e) {
+        console.warn("ZoomToEvac failed to flyTo:", e);
+      }
     }
   }, [location.state, map]);
 

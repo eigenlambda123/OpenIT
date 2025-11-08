@@ -11,7 +11,7 @@ import L from 'leaflet';
 
 // Create custom icons for earthquake and evacuation centers
 const quakeIcon = new L.Icon({
-  iconUrl: '/earthquake.png', // Add these icons to your public folder
+  iconUrl: '/earthquake.png',
   iconSize: [32, 32],
 });
 
