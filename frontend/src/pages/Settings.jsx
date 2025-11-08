@@ -1,14 +1,10 @@
 import { useState } from 'react';
 import {
-  Box,
+  Flex, VStack,
+  Heading, Text,
   Button,
-  FormControl,
-  FormLabel,
-  Input,
-  VStack,
+  FormControl, FormLabel, Input,
   useToast,
-  Heading,
-  Text
 } from '@chakra-ui/react';
 import axios from 'axios';
 
@@ -92,8 +88,11 @@ function Settings() {
   };
 
   return (
-    <Box p={4} maxW="600px" mx="auto">
-      <VStack spacing={6} align="stretch">
+    <Flex
+      justify="center"
+      p={["20px", "30px"]}
+    >
+      <Flex direction="column" gap="20px" w="min(600px, 95%)">
         <Heading size="lg">Location Settings</Heading>
         <Text>
           Set your location to receive earthquake alerts when tremors are detected nearby.
@@ -141,8 +140,8 @@ function Settings() {
             </Button>
           </VStack>
         </form>
-      </VStack>
-    </Box>
+      </Flex>
+    </Flex>
   );
 }
 
