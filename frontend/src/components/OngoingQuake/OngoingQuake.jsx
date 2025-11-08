@@ -8,6 +8,7 @@ import {
   Button,
   HStack,
   useToast,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import Minimap from "../Minimap";
 
@@ -172,10 +173,10 @@ function OngoingQuake() {
         direction="column"
         borderRadius="10px"
         overflow="hidden"
-        bg="white"
+        bg={useColorModeValue("gray.200", "gray.900")}
         sx={{filter: "drop-shadow(0px 0px 2px rgba(0, 0, 2, 0.3))"}}
       >
-        <Box h="150px" w="100%" bg="gray.200">
+        <Box h="150px" w="100%">
           {quakeData.latitude && quakeData.longitude && (
             <Minimap location={[Number(quakeData.latitude), Number(quakeData.longitude)]} />
           )}
@@ -195,10 +196,7 @@ function OngoingQuake() {
             <Text fontSize="sm">
               {new Date(Number(quakeData.earthquake_time)).toLocaleTimeString()}
             </Text>
-            <Text 
-              fontSize="sm" 
-              color={Number(quakeData.magnitude) >= 5 ? "red.500" : "black"}
-            >
+            <Text fontSize="sm" color="red.500">
               {quakeData.magnitude} Magnitude
             </Text>
             <Text fontSize="sm" color="red.500">
