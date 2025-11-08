@@ -46,10 +46,7 @@ async def get_earthquakes(
                 data_count+=1
 
             return all_data
-
-
-
-            return {"magnitude": mag, "place":place, "time":time, "title":title, "coordinates":coordinates}
+        
     except httpx.RequestError as exc:
         raise HTTPException(status_code=500, detail=f"USGS API request failed: {exc}")
     except httpx.HTTPStatusError as exc:
