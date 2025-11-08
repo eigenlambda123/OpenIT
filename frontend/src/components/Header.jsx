@@ -22,20 +22,23 @@ function Header() {
 		<>
 			<Flex
         as="header"
-        bg={bgColor[6]}
-        px={["20px", "30px"]} py={["10px", "20px"]}
-        align="center"
+				bg={bgColor[6]}
+        px={["20px", "30px"]}
+				py={["10px", "20px"]}
+				justify="center"
         position="sticky"
         top="0"
         zIndex="100"
       >
-				<Heading as="h1" size="md">Earthquake</Heading>
-				<Spacer />
-				<HStack spacing="16px" align="center">
-					<Button onClick={toggleColorMode} bg="none" p="8px">
-						{colorMode === "light" ? <SunIcon color="yellow.500" /> : <MoonIcon color="yellow.500" />}
-					</Button>
-				</HStack>
+				<Flex align="center" w="min(600px, 95%)">
+					<Heading as="h1" size="md">Earthquake</Heading>
+					<Spacer />
+					<HStack spacing="16px" align="center">
+						<Button onClick={toggleColorMode} bg="none" p="8px">
+							{colorMode === "light" ? <SunIcon color="yellow.500" /> : <MoonIcon color="yellow.500" />}
+						</Button>
+					</HStack>
+				</Flex>
 			</Flex>
 		</>
 	);

@@ -11,14 +11,13 @@ function QuakeEntry({ quakeData }) {
       direction="column"
       w="100%"
       bg="gray.200"
-      px={["10px", "20px"]}
-      py={["5px", "10px"]}
+      p="10px"
     >
-      <Heading size="sm">
-        {quakeData.magnitude}
+      <Heading fontSize={["12px", "md"]}>
+        {`${quakeData.mag} Magnitude Earthquake`}
       </Heading>
-      <Text>
-        {quakeData.distance}
+      <Text fontSize={["10px", "sm"]}>
+        {quakeData.place}
       </Text>
     </Flex>
   );
