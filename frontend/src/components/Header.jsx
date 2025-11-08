@@ -1,12 +1,18 @@
 import {
 	Flex, HStack, Spacer,
-	Heading, Button,
+	Button,
+	Image,
 	useColorMode, useColorModeValue,
+	useDisclosure,
 } from "@chakra-ui/react";
 import { SunIcon, MoonIcon } from "@chakra-ui/icons";
+import Sidebar from "../components/Sidebar";
+import { Menu } from "lucide-react";
 
 function Header() {
 	const { colorMode, toggleColorMode } = useColorMode();
+
+	const { isOpen, onOpen, onClose } = useDisclosure()
 
 	const bgColor = {
     8: useColorModeValue("red.700", "red.700"),
@@ -20,9 +26,10 @@ function Header() {
 
 	return (
 		<>
+			<Sidebar isOpen={isOpen} onClose={onClose} />
 			<Flex
         as="header"
-				bg={bgColor[6]}
+				bg={useColorModeValue("brand.600", "brand.400")}
         px={["20px", "30px"]}
 				py={["10px", "20px"]}
 				justify="center"
@@ -31,11 +38,14 @@ function Header() {
         zIndex="100"
       >
 				<Flex align="center" w="min(600px, 95%)">
-					<Heading as="h1" size="md">Earthquake</Heading>
+					<Image src="/logo/LIGTAS.png" alt="LIGTAS Logo" w="100px" />
 					<Spacer />
-					<HStack spacing="16px" align="center">
+					<HStack spacing="5px" align="center">
 						<Button onClick={toggleColorMode} bg="none" p="8px">
 							{colorMode === "light" ? <SunIcon color="yellow.500" /> : <MoonIcon color="yellow.500" />}
+						</Button>
+						<Button onClick={onOpen} bg="none" p="8px">
+							<Menu size={24} />
 						</Button>
 					</HStack>
 				</Flex>
