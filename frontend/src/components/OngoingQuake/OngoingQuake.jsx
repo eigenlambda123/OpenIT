@@ -5,6 +5,7 @@ import {
   Button,
   HStack,
 } from "@chakra-ui/react";
+import Minimap from "../Minimap";
 
 function OngoingQuake() {
   return (
@@ -19,7 +20,7 @@ function OngoingQuake() {
         sx={{filter: "drop-shadow(0px 0px 2px rgba(0, 0, 2, 0.3))"}}
       >
         <Box h="100px" w="100%" bg="gray.200">
-
+          <Minimap />
         </Box>
         <Flex direction="column" gap="10px" p="10px">
           <Heading size="sm">
