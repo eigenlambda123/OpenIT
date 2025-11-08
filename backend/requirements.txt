@@ -1,5 +1,6 @@
 fastapi
-
-requests
-beautifulsoup4
 uvicorn
+
+httpx
+
+sqlmodel

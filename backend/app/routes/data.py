@@ -1,11 +1,12 @@
 from fastapi import HTTPException, APIRouter
+from app.schemas.data import Earthquake
 import httpx
 
 router = APIRouter(prefix="/data", tags=["data"])
 
 USGS_API_BASE_URL = "https://earthquake.usgs.gov/fdsnws/event/1/"
 
-@router.get("/earthquakes")
+@router.get("/earthquakes", response_model=Earthquake)
 async def get_earthquakes(
     starttime: str = "2025-11-01",
     endtime: str = "2025-11-07",
