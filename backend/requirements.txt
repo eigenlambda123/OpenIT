@@ -1,0 +1,6 @@
+fastapi
+
+#scraper
+requests
+beautifulsoup4
+uvicorn
