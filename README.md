@@ -18,9 +18,6 @@
     <br />
 </div>
 
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
 [![project_license][license-shield]][license-url]
 
 <!-- TABLE OF CONTENTS -->
