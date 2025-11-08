@@ -1,7 +1,5 @@
-import { useState } from "react";
 import {
 	Flex, HStack, Spacer,
-	Button,
 	Image,
 	useColorMode, useColorModeValue,
 	useDisclosure,
@@ -48,6 +46,7 @@ function Header() {
 							onClick={toggleColorMode}
 							aria-label="Toggle Color Mode"
 							size="lg"
+							color="yellow.500"
 						/>
 						<IconButton
 							variant="ghost"
