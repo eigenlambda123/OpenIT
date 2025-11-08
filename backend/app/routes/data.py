@@ -3,7 +3,7 @@ import httpx
 from typing import List
 from app.db.database import get_session
 from sqlmodel import Session, select
-from app.models.data import Earthquake
+from app.models.data import Earthquake, Evacuation
 from app.schemas.data import EarthquakeSchema
 
 router = APIRouter(prefix="/data", tags=["data"])
@@ -106,3 +106,8 @@ async def get_earthquakes_from_db(session: Session = Depends(get_session)):
     data = session.exec(select(Earthquake).limit(3)).all()
     return data
     
+
+@router.get("/evacuation")
+async def get_evacuation_data(session: Session = Depends(get_session)):
+    data = session.exec(select(Evacuation)).all()
+    return data
