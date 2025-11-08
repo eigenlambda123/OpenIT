@@ -45,7 +45,7 @@ function OngoingQuake() {
     
     navigate('/map', {
       state: {
-        center: [quakeData.latitude, quakeData.longitude],
+        center: [ quakeData.latitude, quakeData.longitude ],
         quake: quakeData
       }
     });
@@ -55,9 +55,10 @@ function OngoingQuake() {
     try {
       // Fetch evacuation centers
       const response = await axios.get(`${BASE}/data/evacuation`);
+      console.log(response.data);
       navigate('/map', {
         state: {
-          center: [quakeData.latitude, quakeData.longitude],
+          center: [ quakeData.latitude, quakeData.longitude ],
           quake: quakeData,
           showEvacuations: true,
           evacuations: response.data
@@ -115,7 +116,11 @@ function OngoingQuake() {
           </Grid>
         </Flex>
         <HStack w="100%" p="10px">
-          <Button size={["sm", "md"]} w="50%" onClick={handleViewMap}>
+          <Button
+            size={["sm", "md"]}
+            w="50%"
+            onClick={handleViewMap}
+          >
             View in Map
           </Button>
           <Button 
