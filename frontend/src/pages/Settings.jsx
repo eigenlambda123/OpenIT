@@ -1,14 +1,10 @@
 import { useState } from 'react';
 import {
-  Box,
+  Flex, VStack,
+  Heading, Text,
   Button,
-  FormControl,
-  FormLabel,
-  Input,
-  VStack,
+  FormControl, FormLabel, Input,
   useToast,
-  Heading,
-  Text
 } from '@chakra-ui/react';
 import axios from 'axios';
 
@@ -56,44 +52,21 @@ function Settings() {
     if (!email || !location) {
       toast({
         title: "Error",
-        description: "Please provide both email and location",
+        description: "Please provide email",
         status: "error",
         duration: 5000,
       });
       return;
     }
 
-    try {
-      const response = await axios.post(`${BASE}/data/add/user_location`, {
-        email,
-        latitude: location.latitude,
-        longitude: location.longitude
-      });
-
-      toast({
-        title: "Success",
-        description: "Location saved successfully",
-        status: "success",
-        duration: 5000,
-      });
-
-      // Clear form
-      setEmail('');
-      setLocation(null);
-
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: error.response?.data?.detail || "Failed to save location",
-        status: "error",
-        duration: 5000,
-      });
-    }
-  };
-
   return (
-    <Box p={4} maxW="600px" mx="auto">
-      <VStack spacing={6} align="stretch">
+    <Flex
+      justify="center"
+      p={["20px", "30px"]}
+    >
+      <Flex direction="column" gap="20px" w="min(600px, 95%)">
+
+
         <form onSubmit={handleSubmit}>
           <VStack spacing={4}>
             <FormControl isRequired>
@@ -116,8 +89,8 @@ function Settings() {
             </Button>
           </VStack>
         </form>
-      </VStack>
-    </Box>
+      </Flex>
+    </Flex>
   );
 }
 
