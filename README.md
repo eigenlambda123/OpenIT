@@ -167,8 +167,8 @@ For questions or issues, open an issue on the repository or contact the maintain
 [forks-url]: https://github.com/neophiles/KlimaTech/network/members
 [stars-shield]: https://img.shields.io/github/stars/neophiles/KlimaTech.svg?style=for-the-badge
 [stars-url]: https://github.com/neophiles/KlimaTech/stargazers
-[license-shield]: https://img.shields.io/github/license/neophiles/KlimaTech.svg?style=for-the-badge
-[license-url]: https://github.com/neophiles/KlimaTech/blob/main/LICENSE
+[license-shield]: https://img.shields.io/github/license/eigenlambda123/OpenIT.svg?style=for-the-badge
+[license-url]: https://github.com/eigenlambda123/OpenIT/blob/main/LICENSE
 [Presko-screenshot]: frontend/public/logo/name_logo.png
 <!-- Shields.io badges-->
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
