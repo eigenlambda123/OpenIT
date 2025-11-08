@@ -13,12 +13,12 @@ function Footer() {
     <Flex 
         as="footer"
         bg={bgColor}
-        px="30px"
-        py="20px"
+        px={["20px", "30px"]}
+        py={["10px", "20px"]}
         justify="center"
         mt="auto"
     >
-      <Text fontSize="sm">
+      <Text fontSize="sm" textAlign="center">
         &copy; {currentYear} QuannOX Byte. All rights reserved.
       </Text>
     </Flex>

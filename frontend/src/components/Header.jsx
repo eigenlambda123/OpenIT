@@ -5,18 +5,25 @@ import {
 } from "@chakra-ui/react";
 import { SunIcon, MoonIcon } from "@chakra-ui/icons";
 
-function TopNavbar() {
+function Header() {
 	const { colorMode, toggleColorMode } = useColorMode();
 
-	const bgColor = useColorModeValue("white", "gray.800");
+	const bgColor = {
+    8: useColorModeValue("red.700", "red.700"),
+    7: useColorModeValue("red.600", "red.600"),
+    6: useColorModeValue("red.500", "red.500"),
+    5: useColorModeValue("orange.500", "orange.500"),
+    4: useColorModeValue("orange.400", "orange.400"),
+    3: useColorModeValue("yellow.500", "yellow.500"),
+    2: useColorModeValue("yellow.400", "yellow.400"),
+  }
 
 	return (
 		<>
 			<Flex
         as="header"
-        bg={bgColor}
-        px="30px"
-        py="20px"
+        bg={bgColor[6]}
+        px={["20px", "30px"]} py={["10px", "20px"]}
         align="center"
         position="sticky"
         top="0"
@@ -34,4 +41,4 @@ function TopNavbar() {
 	);
 }
 
-export default TopNavbar;
+export default Header;
