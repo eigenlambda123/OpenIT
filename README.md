@@ -51,15 +51,17 @@ The app also features an interactive map that helps users locate the nearest “
 ### Built With
 
 Frontend:
-- [![Chakra][Chakra.react]][Chakra.url]
-- [![Leaflet][Leaflet.react]][leaflet.url]
+- React
+- Chakra
+- Leaflet
 
 Backend:
-- [![Python][Python]][Python-url]
-- [![FastAPI][FastAPI]][FastAPI-url]
+- Python
+- FastAPI
+- SqlModel
 
 Database:
-- [![SQLlite][SQL lite]][SQLlite.url]
+- SQLite
 
 APIs:
 - *USGSD*
@@ -77,20 +79,20 @@ Screenshots:
 <div>
   <h3>Onboarding</h3>
     <span>
-      <img src="public/logo/Screenshot 2025-11-09 051222.png" alt="Screenshot 2025-11-09 051222 png" height="700"> 
+      <img src="frontend/public/logo/Screenshot 2025-11-09 051222.png" alt="Screenshot 2025-11-09 051222 png" height="700"> 
     </span>
   <hr>
   <h3>Dashboard</h3>
-    <img src="public/logo/Screenshot 2025-11-09 051322.png" alt="Screenshot 2025-11-09 051322 png" height="700">
+    <img src="frontend/public/logo/Screenshot 2025-11-09 051322.png" alt="Screenshot 2025-11-09 051322 png" height="700">
     <img src="frontend/public/logo/Screenshot 2025-11-09 051358.png" alt="Screenshot 2025-11-09 051358 png" height="700">
   <hr>
   <h3>Map</h3>
     <span>
-      <img src="public/logo/Screenshot 2025-11-09 051422.png" alt="Screenshot 2025-11-09 051422 png" height="700">
+      <img src="frontend/public/logo/Screenshot 2025-11-09 051422.png" alt="Screenshot 2025-11-09 051422 png" height="700">
     </span>
   <hr>
   <h3>Settings</h3>
-    <img src="public/logo/Screenshot 2025-11-09 051438.png" alt="Screenshot 2025-11-09 051438 png" height="700">
+    <img src="frontend/public/logo/Screenshot 2025-11-09 051438.png" alt="Screenshot 2025-11-09 051438 png" height="700">
   <hr>
 </div>
 
