@@ -1,9 +1,11 @@
+import { useState } from "react";
 import {
 	Flex, HStack, Spacer,
 	Button,
 	Image,
 	useColorMode, useColorModeValue,
 	useDisclosure,
+	IconButton,
 } from "@chakra-ui/react";
 import { SunIcon, MoonIcon } from "@chakra-ui/icons";
 import Sidebar from "../components/Sidebar";
@@ -11,7 +13,6 @@ import { Menu } from "lucide-react";
 
 function Header() {
 	const { colorMode, toggleColorMode } = useColorMode();
-
 	const { isOpen, onOpen, onClose } = useDisclosure()
 
 	const bgColor = {
@@ -41,12 +42,20 @@ function Header() {
 					<Image src="/logo/LIGTAS.png" alt="LIGTAS Logo" w="100px" />
 					<Spacer />
 					<HStack spacing="5px" align="center">
-						<Button onClick={toggleColorMode} bg="none" p="8px">
-							{colorMode === "light" ? <SunIcon color="yellow.500" /> : <MoonIcon color="yellow.500" />}
-						</Button>
-						<Button onClick={onOpen} bg="none" p="8px">
-							<Menu size={24} />
-						</Button>
+						<IconButton
+							variant="ghost"
+							icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+							onClick={toggleColorMode}
+							aria-label="Toggle Color Mode"
+							size="lg"
+						/>
+						<IconButton
+							variant="ghost"
+							icon={<Menu size={24} />}
+							onClick={onOpen}
+							aria-label="Open Menu"
+							size="lg"
+						/>
 					</HStack>
 				</Flex>
 			</Flex>
