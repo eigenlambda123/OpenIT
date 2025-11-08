@@ -119,3 +119,53 @@ async def add_user_location(user: UserLocationCreate, session: Session = Depends
     session.commit()
     session.refresh(new_user)
     return new_user
+
+
+import math
+
+def haversine(lat1, lon1, lat2, lon2):
+    R = 6371  # Earth radius in kilometers
+    lat1, lon1, lat2, lon2 = map(math.radians, [lat1, lon1, lat2, lon2])
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
+
+    a = math.sin(dlat/2)**2 + math.cos(lat1)*math.cos(lat2)*math.sin(dlon/2)**2
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+
+    return R * c
+
+@router.get("/distance")
+async def user_distance_from_earthquake(
+    user_id: int,
+    session: Session = Depends(get_session),
+    alert_threshold_km: float = 100.0,
+):
+    # Get user location
+    user = session.exec(select(UserLocation).where(UserLocation.id == user_id)).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User location not found")
+
+    # Get latest earthquake
+    earthquake = session.exec(
+        select(Earthquake).order_by(Earthquake.time.desc())
+    ).first()
+    if not earthquake:
+        raise HTTPException(status_code=404, detail="No earthquake data")
+
+    # Calculate distance
+    distance_km = haversine(
+        user.latitude, user.longitude,
+        earthquake.latitude, earthquake.longitude
+    )
+
+    alert = distance_km <= alert_threshold_km
+
+    return {
+        "earthquake_id": earthquake.id,
+        "earthquake_time": earthquake.time,
+        "distance_km": round(distance_km, 2),
+        "alert": alert,
+        "threshold_km": alert_threshold_km,
+        "earthquake_place": earthquake.place,
+        "magnitude": earthquake.mag
+    }
