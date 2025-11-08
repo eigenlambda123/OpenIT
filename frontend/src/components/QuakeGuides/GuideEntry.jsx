@@ -17,8 +17,7 @@ function GuideEntry({ guideData }) {
       bg="gray.200"
       borderLeft="5px solid"
       borderColor={borderColor}
-      px={["10px", "20px"]}
-      py={["5px", "10px"]}
+      p="10px"
     >
       <Heading fontSize={["12px", "md"]}>
         {guideData.heading}
