@@ -82,7 +82,7 @@ Screenshots:
   <hr>
   <h3>Dashboard</h3>
     <img src="public/logo/Screenshot 2025-11-09 051322.png" alt="Screenshot 2025-11-09 051322 png" height="700">
-    <img src="public/logo/Screenshot 2025-11-09 051358.png" alt="Screenshot 2025-11-09 051358 png" height="700">
+    <img src="frontend/public/logo/Screenshot 2025-11-09 051358.png" alt="Screenshot 2025-11-09 051358 png" height="700">
   <hr>
   <h3>Map</h3>
     <span>
