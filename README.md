@@ -93,7 +93,7 @@ Screenshots:
   <hr>
   <h3>Settings</h3>
     <img src="frontend/public/logo/Screenshot 2025-11-09 051438.png" alt="Screenshot 2025-11-09 051438 png" height="700">
-    <img src="frontend/public/logo/Screenshot 2025-11-09 051438.png" alt="Screenshot 2025-11-09 052035 png" height="700">
+    <img src="frontend/public/logo/Screenshot 2025-11-09 052035.png" alt="Screenshot 2025-11-09 052035 png" height="700">
 
   <hr>
 </div>
