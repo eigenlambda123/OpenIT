@@ -1,5 +1,5 @@
 import { 
-  Flex,
+  Box, Flex,
   Text,
   useColorModeValue
 } from "@chakra-ui/react"
@@ -18,9 +18,11 @@ function Footer() {
         justify="center"
         mt="auto"
     >
-      <Text fontSize="sm" textAlign="center">
-        &copy; {currentYear} QuannOX Byte. All rights reserved.
-      </Text>
+      <Box align="center" w="min(600px, 95%)">
+        <Text fontSize="sm" textAlign="center">
+          &copy; {currentYear} QuannOX Byte. All rights reserved.
+        </Text>
+      </Box>
     </Flex>
   )
 }
