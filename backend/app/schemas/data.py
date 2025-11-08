@@ -8,3 +8,7 @@ class EarthquakeSchema(BaseModel):
     time: int
     latitude: float
     longitude: float
+
+class UserLocationCreate(BaseModel):
+    latitude: float
+    longitude: float
